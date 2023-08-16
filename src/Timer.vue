@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { currentPaliaTime, PaliaTime } from "./paliaTime";
+import { currentPaliaTime, type PaliaTime } from "./paliaTime";
 
 const props = defineProps<{
   format?: "AM" | "24";
