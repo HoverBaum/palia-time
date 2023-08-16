@@ -9,13 +9,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import { currentPaliaTime, type PaliaTime } from "./paliaTime";
 
 const props = defineProps<{
   format?: "AM" | "24";
 }>();
-let { format } = props;
+const { format } = props;
 
 const emit = defineEmits<{
   tick: [time: PaliaTime];
