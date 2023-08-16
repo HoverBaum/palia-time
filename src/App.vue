@@ -4,7 +4,6 @@ import Timer from "./Timer.vue";
 import type { PaliaTime } from "./paliaTime";
 
 const onTick = (time: PaliaTime) => {
-  console.log(time);
   document.title = `Palia Time - ${time.hours
     .toString()
     .padStart(2, "0")}:${time.minute.toString().padStart(2, "0")}`;
