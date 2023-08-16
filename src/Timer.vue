@@ -4,44 +4,34 @@
       <span :style="{ '--value': hours }"></span>:
       <span :style="{ '--value': minutes }"></span>
     </span>
+    <span v-if="format === 'AM'" class="ml-1">{{ amString }}</span>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
+import { currentPaliaTime } from "./paliaTime";
 
 const props = defineProps<{
   format?: "AM" | "24";
 }>();
 
+let { format } = props;
+
 const hours = ref("00");
 const minutes = ref("00");
-const seconds = ref("00");
-
-const timeToPaliaSecondsSinceMidnight = (now: Date): number => {
-  const millisSinceFullHour = now.getTime() % 3600000;
-  const millisInAnHour = 3600000;
-  const secondsInADay = 86400;
-
-  // An hour in real time equals a day in palia time.
-  // millisSinceFullHour / millisInAnHour = PaliaSecondsSinceMidnight / secondsInADay
-  // Which leads us to this calculation.
-  const paliaSecondsSinceMidnight = Math.floor(
-    (millisSinceFullHour / millisInAnHour) * secondsInADay
-  );
-  return paliaSecondsSinceMidnight;
-};
+const amString = ref("AM");
 
 const updateTime = () => {
-  const now = new Date();
+  const paliaTime = currentPaliaTime();
 
-  const paliaSecondsSinceMidnight = timeToPaliaSecondsSinceMidnight(now);
-  const paliaHour = Math.floor(paliaSecondsSinceMidnight / 3600);
-  const paliaMinute = Math.floor((paliaSecondsSinceMidnight % 3600) / 60);
-
-  hours.value = paliaHour.toString().padStart(2, "0");
-  minutes.value = paliaMinute.toString().padStart(2, "0");
-  seconds.value = (paliaSecondsSinceMidnight % 60).toString().padStart(2, "0");
+  if (format === "AM") {
+    hours.value = paliaTime.amHours.toString().padStart(2, "0");
+    amString.value = paliaTime.hours < 12 ? "AM" : "PM";
+  } else {
+    hours.value = paliaTime.hours.toString().padStart(2, "0");
+  }
+  minutes.value = paliaTime.minute.toString().padStart(2, "0");
 };
 
 /**
