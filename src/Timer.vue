@@ -10,13 +10,16 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { currentPaliaTime } from "./paliaTime";
+import { currentPaliaTime, PaliaTime } from "./paliaTime";
 
 const props = defineProps<{
   format?: "AM" | "24";
 }>();
-
 let { format } = props;
+
+const emit = defineEmits<{
+  tick: [time: PaliaTime];
+}>();
 
 const hours = ref("00");
 const minutes = ref("00");
@@ -32,6 +35,7 @@ const updateTime = () => {
     hours.value = paliaTime.hours.toString().padStart(2, "0");
   }
   minutes.value = paliaTime.minute.toString().padStart(2, "0");
+  emit("tick", paliaTime);
 };
 
 /**
