@@ -9,13 +9,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { currentPaliaTime, type PaliaTime } from "./paliaTime";
 
 const props = defineProps<{
   format?: "AM" | "24";
 }>();
-const { format } = props;
 
 const emit = defineEmits<{
   tick: [time: PaliaTime];
@@ -28,7 +27,7 @@ const amString = ref("AM");
 const updateTime = () => {
   const paliaTime = currentPaliaTime();
 
-  if (format === "AM") {
+  if (props.format === "AM") {
     hours.value = paliaTime.amHours.toString().padStart(2, "0");
     amString.value = paliaTime.hours < 12 ? "AM" : "PM";
   } else {

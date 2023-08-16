@@ -18,11 +18,7 @@ const useAM = ref(false);
     <div>
       <h1 class="text-6xl mb-8">Palia Time</h1>
       <div class="grid place-items-center">
-        <Timer
-          :key="useAM + 'key'"
-          @tick="onTick"
-          :format="useAM ? 'AM' : '24'"
-        />
+        <Timer @tick="onTick" :format="useAM ? 'AM' : '24'" />
       </div>
     </div>
   </div>
