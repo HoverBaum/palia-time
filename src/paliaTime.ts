@@ -1,9 +1,12 @@
+export type PaliaTimeOfDay = 'morning' | 'day' | 'evening' | 'night'
+
 export type PaliaTime = {
   hours: number
   amHours: number
   minute: number
   second: number
   secondsSinceMidnight: number
+  timeOfDay: PaliaTimeOfDay
 }
 
 export const timeToPaliaSecondsSinceMidnight = (now: Date): number => {
@@ -32,6 +35,11 @@ export const paliaSecondsSinceMidnightToPaliaTime = (
   const hours = Math.floor(paliaSeconds / secondsInAnHour)
   const minute = Math.floor((paliaSeconds % 3600) / 60)
   const second = paliaSeconds % secondsInAMinute
+  let timeOfDay: PaliaTimeOfDay = 'night'
+  if (hours >= 3) timeOfDay = 'morning'
+  if (hours >= 6) timeOfDay = 'day'
+  if (hours >= 18) timeOfDay = 'evening'
+  if (hours >= 21) timeOfDay = 'night'
 
   return {
     hours,
@@ -39,6 +47,7 @@ export const paliaSecondsSinceMidnightToPaliaTime = (
     minute,
     second,
     secondsSinceMidnight: paliaSeconds,
+    timeOfDay,
   }
 }
 
