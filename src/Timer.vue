@@ -1,16 +1,23 @@
 <template>
-  <div>
-    <span class="countdown font-mono text-4xl">
-      <span :style="{ '--value': hours }"></span>:
-      <span :style="{ '--value': minutes }"></span>
-    </span>
-    <span v-if="format === 'AM'" class="ml-1">{{ amString }}</span>
+  <div class="flex flex-col items-center">
+    <div>
+      <span class="countdown font-mono text-4xl">
+        <span :style="{ '--value': hours }"></span>:
+        <span :style="{ '--value': minutes }"></span>
+      </span>
+      <span v-if="format === 'AM'" class="ml-1">{{ amString }}</span>
+    </div>
+    <span class="mt-4" :style="{ color: timeOfDayColor }">{{ timeOfday }}</span>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { currentPaliaTime, type PaliaTime } from "./paliaTime";
+import {
+  currentPaliaTime,
+  type PaliaTimeOfDay,
+  type PaliaTime,
+} from "./paliaTime";
 
 const props = defineProps<{
   format?: "AM" | "24";
@@ -23,6 +30,8 @@ const emit = defineEmits<{
 const hours = ref("00");
 const minutes = ref("00");
 const amString = ref("AM");
+const timeOfday = ref<PaliaTimeOfDay | "">("");
+const timeOfDayColor = ref("");
 
 const updateTime = () => {
   const paliaTime = currentPaliaTime();
@@ -34,6 +43,15 @@ const updateTime = () => {
     hours.value = paliaTime.hours.toString().padStart(2, "0");
   }
   minutes.value = paliaTime.minute.toString().padStart(2, "0");
+  timeOfday.value = paliaTime.timeOfDay;
+
+  let currentColor = "#334059";
+  if (paliaTime.hours >= 3) currentColor = "#bb9f71";
+  if (paliaTime.hours >= 6) currentColor = "#6399c4";
+  if (paliaTime.hours >= 18) currentColor = "#c08f8d";
+  if (paliaTime.hours >= 21) currentColor = "#334059";
+  timeOfDayColor.value = currentColor;
+
   emit("tick", paliaTime);
 };
 
